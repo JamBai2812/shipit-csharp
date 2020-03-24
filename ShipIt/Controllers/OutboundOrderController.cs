@@ -15,10 +15,12 @@ namespace ShipIt.Controllers
 {
     public class OutboundOrderController : ApiController
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IStockRepository stockRepository;
         private readonly IProductRepository productRepository;
+        
 
         public OutboundOrderController(IStockRepository stockRepository, IProductRepository productRepository)
         {
@@ -26,18 +28,22 @@ namespace ShipIt.Controllers
             this.productRepository = productRepository;
         }
 
-        public List<Truck> Post([FromBody]OutboundOrderRequestModel request)
+        public List<Truck> Post([FromBody] OutboundOrderRequestModel request)
         {
+            var trucksRequired = new List<Truck>();
+            trucksRequired.Add(new Truck());
+            
             log.Info(String.Format("Processing outbound order: {0}", request));
 
-            var trucks = new List<Truck>();
             var gtins = new List<String>();
             foreach (var orderLine in request.OrderLines)
             {
                 if (gtins.Contains(orderLine.gtin))
                 {
-                    throw new ValidationException(String.Format("Outbound order request contains duplicate product gtin: {0}", orderLine.gtin));
+                    throw new ValidationException(
+                        String.Format("Outbound order request contains duplicate product gtin: {0}", orderLine.gtin));
                 }
+
                 gtins.Add(orderLine.gtin);
             }
 
@@ -99,7 +105,7 @@ namespace ShipIt.Controllers
 
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
 
-            return trucks;
+            return trucksRequired;
         }
     }
 }

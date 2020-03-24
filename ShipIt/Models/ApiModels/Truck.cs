@@ -4,8 +4,8 @@ namespace ShipIt.Models.ApiModels
 {
     public class Truck
     {
-        public int Weight { get; set; }
-        public List<Product> ProductList { get; set; }
+        public float Weight { get; set; }
+        public Dictionary<Product, int> StockOnTruck { get; set; }
 
 
         public Truck()
@@ -15,8 +15,14 @@ namespace ShipIt.Models.ApiModels
 
 
         public int NumberOfItemsOnTruck()
-        {
-            return ProductList.Count;
+        {  
+            var total = 0;
+            foreach (var product in StockOnTruck)
+            {
+                total += product.Value;
+            }
+
+            return total;
         }
     }
 }
