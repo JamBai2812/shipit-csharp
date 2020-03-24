@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Http;
+using System.Web.Mvc;
 using System.Web.UI.WebControls.WebParts;
+using Newtonsoft.Json;
 using ShipIt.Exceptions;
 using ShipIt.Models.ApiModels;
 using ShipIt.Repositories;
@@ -23,10 +26,11 @@ namespace ShipIt.Controllers
             this.productRepository = productRepository;
         }
 
-        public void Post([FromBody]OutboundOrderRequestModel request)
+        public List<Truck> Post([FromBody]OutboundOrderRequestModel request)
         {
             log.Info(String.Format("Processing outbound order: {0}", request));
 
+            var trucks = new List<Truck>();
             var gtins = new List<String>();
             foreach (var orderLine in request.OrderLines)
             {
@@ -94,6 +98,8 @@ namespace ShipIt.Controllers
             }
 
             stockRepository.RemoveStock(request.WarehouseId, lineItems);
+
+            return trucks;
         }
     }
 }
