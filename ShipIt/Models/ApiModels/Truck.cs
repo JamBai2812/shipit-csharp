@@ -4,8 +4,8 @@ namespace ShipIt.Models.ApiModels
 {
     public class Truck
     {
-        public float Weight { get; set; }
-        public Dictionary<Product, int> StockOnTruck { get; set; }
+        public double Weight { get; set; }
+        public List<Batch> StockOnTruck { get; set; }
 
 
         public Truck()
@@ -17,9 +17,9 @@ namespace ShipIt.Models.ApiModels
         public int NumberOfItemsOnTruck()
         {  
             var total = 0;
-            foreach (var product in StockOnTruck)
+            foreach (var batch in StockOnTruck)
             {
-                total += product.Value;
+                total += batch.Quantity;
             }
 
             return total;
