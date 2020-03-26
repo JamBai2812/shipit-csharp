@@ -47,6 +47,16 @@ namespace ShipIt.Controllers
             
             return new EmployeeResponse(employees);
         }
+        
+        public EmployeeResponse GetById(int id)
+        {
+            log.Info(String.Format("Looking up employee by id: {0}", id));
+
+            var employee = new Employee(employeeRepository.GetEmployeeById(id));
+
+            log.Info("Found employee: " + employee);
+            return new EmployeeResponse(employee);
+        }
 
         public Response Post([FromBody]AddEmployeesRequest requestModel)
         {
