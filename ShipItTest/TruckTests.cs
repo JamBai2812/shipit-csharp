@@ -15,7 +15,7 @@ namespace ShipItTest
         private TruckFillingHandler _truckFillingHandler;
         private IProductRepository _repo;
 
-        private readonly ProductDataModel TestProduct = new ProductDataModel
+        private readonly ProductDataModel TestProduct = new ProductDataModel()
         {
             Id = 17,
             Weight = 100,
@@ -38,25 +38,65 @@ namespace ShipItTest
         public void SmallOrderGoesOnOneTruck()
         {
             //Arrange
-            var lineItems = new List<StockAlteration>
+            var batches = new List<Batch>
             {
-                new StockAlteration(17, 3),
+                new Batch(17, "TV", 10, 3)
             };
 
             //Act
-            var trucks = _truckFillingHandler.FillTrucks(lineItems);
+            var trucks = _truckFillingHandler.FillTrucks(batches);
             var truckList = trucks.ToList();
-
 
             //Assert
             
             Assert.AreEqual(truckList.Count, 1);
             Assert.AreEqual(truckList[0].StockOnTruck.Count, 1);
             Assert.AreEqual(truckList[0].StockOnTruck[0].Quantity, 3);
-            Assert.AreEqual(truckList[0].Weight, 300);
+            Assert.AreEqual(truckList[0].Weight, 30);
+        }
+        
+        [Test]
+        public void OrdersOver2000kgGoOnMultipleTrucks()
+        {
+            //Arrange
+            var batches = new List<Batch>
+            {
+                new Batch(17, "Fridge", 100, 18),
+                new Batch(16, "TV", 20, 40)
+            };
 
+            //Act
+            var trucks = _truckFillingHandler.FillTrucks(batches);
+            var truckList = trucks.ToList();
 
+            //Assert
+            
+            Assert.AreEqual(truckList.Count, 2);
+            // Assert.AreEqual(truckList[0].StockOnTruck.Count, 1);
+            // Assert.AreEqual(truckList[0].StockOnTruck[0].Quantity, 3);
+            // Assert.AreEqual(truckList[0].Weight, 30);
+        }
 
+        [Test]
+
+        public void LargeOrderGetsSplitBetweenTrucks()
+        {
+            //Arrange
+            var batches = new List<Batch>
+            {
+                new Batch(17, "Fridge", 100, 50)
+            };
+
+            //Act
+            var trucks = _truckFillingHandler.FillTrucks(batches);
+            var truckList = trucks.ToList();
+
+            //Assert
+            
+            Assert.AreEqual(3, truckList.Count);
+            // Assert.AreEqual(truckList[0].StockOnTruck.Count, 1);
+            // Assert.AreEqual(truckList[0].StockOnTruck[0].Quantity, 3);
+            // Assert.AreEqual(truckList[0].Weight, 30);
         }
     }
 }

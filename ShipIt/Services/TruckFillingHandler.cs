@@ -6,7 +6,7 @@ namespace ShipIt.Models.ApiModels
 {
     public interface ITruckFillingHandler
     {
-        List<Truck> FillTrucks(List<StockAlteration> lineItems);
+        List<Truck> FillTrucks(List<Batch> batches);
     }
 
     public class TruckFillingHandler : ITruckFillingHandler
@@ -18,26 +18,25 @@ namespace ShipIt.Models.ApiModels
             _repo = repo;
         }
 
-        public List<Truck> FillTrucks(List<StockAlteration> lineItems)
+        public List<Truck> FillTrucks(List<Batch> batches)
         {
             var trucks = new List<Truck> {new Truck()};
 
-            foreach (var item in lineItems)
+            foreach (var batch in batches)
             {
-                var batch = new Batch(item);
-                var truckToPack = trucks.DefaultIfEmpty(null).First(t => t.Weight + (batch.BatchWeight) < 2000);
+                var truckToPack = trucks.FirstOrDefault(t => t.Weight + (batch.BatchWeight) <= 2000);
                 
-                if (!truckToPack.Equals(null))
-                {
-                    truckToPack.StockOnTruck.Add(batch);
-                    truckToPack.Weight += (batch.BatchWeight);
-                }
-                else
+                if (truckToPack == null)
                 {
                     var newTruckToPack = new Truck();
                     newTruckToPack.StockOnTruck.Add(batch);
                     newTruckToPack.Weight += batch.BatchWeight;
                     trucks.Add(newTruckToPack);
+                }
+                else
+                {
+                    truckToPack.StockOnTruck.Add(batch);
+                    truckToPack.Weight += (batch.BatchWeight);
                 }
                
                 //Problem where products will be added to a new truck even if total weight is over 2000kg.
@@ -55,6 +54,15 @@ namespace ShipIt.Models.ApiModels
         public double ProductWeight { get; set; }
         public int Quantity { get; set; }
         public double BatchWeight { get; set; }
+
+        public Batch(int id, string name, double weight, int quantity)
+        {
+            ProductId = id;
+            ProductName = name;
+            ProductWeight = weight;
+            Quantity = quantity;
+            BatchWeight = weight * quantity;
+        }
 
 
         public Batch(StockAlteration stockAlteration)

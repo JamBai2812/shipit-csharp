@@ -10,6 +10,7 @@ namespace ShipIt.Models.ApiModels
 
         public Truck()
         {
+            StockOnTruck = new List<Batch>();
             Weight = 0;
         }
 
