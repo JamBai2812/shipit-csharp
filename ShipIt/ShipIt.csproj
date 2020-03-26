@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Migrations\DeleteDuplicateCompanies.sql" />
     <Content Include="Migrations\PrimaryKeyChangeForEmployeeTable.sql" />
     <Content Include="Web.config" />
   </ItemGroup>
