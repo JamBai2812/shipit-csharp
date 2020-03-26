@@ -28,10 +28,10 @@ namespace ShipIt.Controllers
         {
             log.Info(String.Format("Looking up employee by name: {0}", name));
 
-            var employee = new Employee(employeeRepository.GetEmployeeByName(name));
-
-            log.Info("Found employee: " + employee);
-            return new EmployeeResponse(employee);
+            var employees = employeeRepository.GetEmployeesByName(name)
+                .Select(employeeData => new Employee(employeeData)).ToList();
+            
+            return new EmployeeResponse(employees);
         }
 
         public EmployeeResponse Get(int warehouseId)

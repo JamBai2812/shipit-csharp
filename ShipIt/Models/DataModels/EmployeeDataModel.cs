@@ -17,6 +17,8 @@ namespace ShipIt.Models.DataModels
         public string Role { get; set; }
         [DatabaseColumnName("ext")]
         public string Ext { get; set; }
+        [DatabaseColumnName("id")]
+        public int Id { get; set; }
 
         public EmployeeDataModel(IDataReader dataReader) : base(dataReader)
         { }

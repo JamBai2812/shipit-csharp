@@ -14,13 +14,19 @@ namespace ShipIt.Repositories
     {
         int GetCount();
         int GetWarehouseCount();
+        [Obsolete("Use GetEmployeesByName or GetEmployeeById instead")]
         EmployeeDataModel GetEmployeeByName(string name);
+
+        IEnumerable<EmployeeDataModel> GetEmployeesByName(string name);
         EmployeeDataModel GetEmployeeById(int id);
         
         IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId);
         EmployeeDataModel GetOperationsManager(int warehouseId);
         void AddEmployees(IEnumerable<Employee> employees);
+        [Obsolete("Use RemoveEmployee with ID instead")]
         void RemoveEmployee(string name);
+
+        void RemoveEmployee(int id);
     }
 
     public class EmployeeRepository : RepositoryBase, IEmployeeRepository
@@ -83,15 +89,17 @@ namespace ShipIt.Repositories
             return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader),noProductWithIdErrorMessage, parameter);
         }
 
+        public IEnumerable<EmployeeDataModel> GetEmployeesByName(string name)
+        {
+            
+        }
+
         public EmployeeDataModel GetEmployeeById(int id)
         {
             string sql = "SELECT name, w_id, role, ext FROM em WHERE id = @id";
             var parameter = new NpgsqlParameter("@id", id);
             string noProductWithIdErrorMessage = string.Format("No employees found with id: {0}", id);
             return base.RunSingleGetQuery(sql, reader => new EmployeeDataModel(reader),noProductWithIdErrorMessage, parameter);
-            
-            
-            
         }
 
         public IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId)
@@ -146,6 +154,11 @@ namespace ShipIt.Repositories
             {
                 throw new InvalidStateException("Unexpectedly deleted " + rowsDeleted + " rows, but expected a single update");
             }
+        }
+        
+        public void RemoveEmployee(int id)
+        {
+           
         }
     }
 }
