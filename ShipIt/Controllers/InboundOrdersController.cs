@@ -71,7 +71,8 @@ namespace ShipIt.Controllers
             {
                 OrderLines = ol.Value,
                 Company = ol.Key
-            });
+            })
+                .ToList();
 
             log.Info("Constructed inbound order");
 
