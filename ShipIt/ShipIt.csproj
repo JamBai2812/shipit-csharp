@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="connections.config" />
+    <Content Include="DB_modifications" />
     <Content Include="log4net.config" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">

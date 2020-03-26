@@ -25,20 +25,22 @@ namespace ShipIt.Models.ApiModels
             foreach (var batch in batches)
             {
                 var truckToPack = trucks.FirstOrDefault(t => t.Weight + (batch.BatchWeight) <= 2000);
-                
+
                 if (truckToPack == null)
                 {
                     var newTruckToPack = new Truck();
+
                     newTruckToPack.StockOnTruck.Add(batch);
                     newTruckToPack.Weight += batch.BatchWeight;
                     trucks.Add(newTruckToPack);
                 }
+
                 else
                 {
                     truckToPack.StockOnTruck.Add(batch);
                     truckToPack.Weight += (batch.BatchWeight);
                 }
-               
+
                 //Problem where products will be added to a new truck even if total weight is over 2000kg.
             }
 

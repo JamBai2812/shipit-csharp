@@ -40,7 +40,8 @@ namespace ShipIt.Controllers
 
             var employees = employeeRepository
                 .GetEmployeesByWarehouseId(warehouseId)
-                .Select(e => new Employee(e));
+                .Select(e => new Employee(e))
+                .ToList();
 
             log.Info(String.Format("Found employees: {0}", employees));
             
