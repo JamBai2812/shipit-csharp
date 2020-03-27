@@ -11,6 +11,7 @@ namespace ShipIt.Models.ApiModels
 {
     public class Employee
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int WarehouseId { get; set; }
         public EmployeeRole role { get; set; }
@@ -18,6 +19,7 @@ namespace ShipIt.Models.ApiModels
 
         public Employee(EmployeeDataModel dataModel)
         {
+            Id = dataModel.Id;
             Name = dataModel.Name;
             WarehouseId = dataModel.WarehouseId;
             role = MapDatabaseRoleToApiRole(dataModel.Role);
@@ -41,11 +43,12 @@ namespace ShipIt.Models.ApiModels
         public override String ToString()
         {
             return new StringBuilder()
-                    .AppendFormat("name: {0}, ", Name)
-                    .AppendFormat("warehouseId: {0}, ", WarehouseId)
-                    .AppendFormat("role: {0}, ", role)
-                    .AppendFormat("ext: {0}", ext)
-                    .ToString();
+                .AppendFormat("id: {0}, ", Id)
+                .AppendFormat("name: {0}, ", Name)
+                .AppendFormat("warehouseId: {0}, ", WarehouseId)
+                .AppendFormat("role: {0}, ", role)
+                .AppendFormat("ext: {0}", ext)
+                .ToString();
         }
     }
 }

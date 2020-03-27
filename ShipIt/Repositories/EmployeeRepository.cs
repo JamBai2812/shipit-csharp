@@ -105,7 +105,7 @@ namespace ShipIt.Repositories
         public IEnumerable<EmployeeDataModel> GetEmployeesByWarehouseId(int warehouseId)
         {
 
-            string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id";
+            string sql = "SELECT id, name, w_id, role, ext FROM em WHERE w_id = @w_id";
             var parameter = new NpgsqlParameter("@w_id", warehouseId);
             string noProductWithIdErrorMessage =
                 string.Format("No employees found with Warehouse Id: {0}", warehouseId);
@@ -115,7 +115,7 @@ namespace ShipIt.Repositories
         public EmployeeDataModel GetOperationsManager(int warehouseId)
         {
 
-            string sql = "SELECT name, w_id, role, ext FROM em WHERE w_id = @w_id AND role = @role";
+            string sql = "SELECT id, name, w_id, role, ext FROM em WHERE w_id = @w_id AND role = @role";
             var parameters = new []
             {
                 new NpgsqlParameter("@w_id", warehouseId),
@@ -158,7 +158,17 @@ namespace ShipIt.Repositories
         
         public void RemoveEmployee(int id)
         {
-           
+            string sql = "DELETE FROM em WHERE id = @id";
+            var parameter = new NpgsqlParameter("@id", id);
+            var rowsDeleted = RunSingleQueryAndReturnRecordsAffected(sql, parameter);
+            if (rowsDeleted == 0)
+            {
+                throw new NoSuchEntityException("Incorrect result size: expected 1, actual 0");
+            }
+            else if (rowsDeleted > 1)
+            {
+                throw new InvalidStateException("Unexpectedly deleted " + rowsDeleted + " rows, but expected a single update");
+            }
         }
     }
 }
