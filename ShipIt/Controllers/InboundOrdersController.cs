@@ -38,7 +38,8 @@ namespace ShipIt.Controllers
 
             log.Debug(String.Format("Found operations manager: {0}", operationsManager));
 
-            var allStock = stockRepository.GetStockByWarehouseId(warehouseId);
+            IEnumerable<StockDataModel> allStock
+                = stockRepository.GetStockByWarehouseId(warehouseId);
 
             Dictionary<Company, List<InboundOrderLine>> orderlinesByCompany = new Dictionary<Company, List<InboundOrderLine>>();
             foreach (var stock in allStock)
